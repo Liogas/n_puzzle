@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 11:35:39 by glions            #+#    #+#             */
-/*   Updated: 2026/01/20 13:51:35 by glions           ###   ########.fr       */
+/*   Updated: 2026/01/22 11:20:06 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,16 +238,32 @@ void	exo7()
 
 	struct Cmp
 	{
-		bool operator()(Elem &a, Elem &b)
+		bool operator()(const Elem &a, const Elem &b) const
 		{
 			return (a.distance > b.distance);
 		}
 	};
 
+	std::unordered_map<State, std::vector<std::pair<State, int>>, StateHash> graph;
+	graph[State{1}].push_back({State{2}, 1});
+	graph[State{1}].push_back({State{3}, 4});
+
+	graph[State{2}].push_back({State{1}, 1});
+	graph[State{2}].push_back({State{4}, 2});
+
+	graph[State{3}].push_back({State{1}, 4});
+	graph[State{3}].push_back({State{4}, 1});
+
+	graph[State{4}].push_back({State{2}, 2});
+	graph[State{4}].push_back({State{3}, 1});
+	graph[State{4}].push_back({State{5}, 3});
+
+	graph[State{5}].push_back({State{4}, 3});
+	
 	std::unordered_map<State, int, StateHash> distances;
 	std::unordered_map<State, State, StateHash> fathers;
-	
 	std::priority_queue<Elem, std::vector<Elem>, Cmp> tmp;
+
 	State start = State{1};
 	tmp.push(Elem{.distance= 0, .state= start});
 	distances[start] = 0;
@@ -255,36 +271,38 @@ void	exo7()
 	while (!tmp.empty())
 	{
 		Elem val = tmp.top();
-		std::cout << "Traitement de " << val.state.value << std::endl;
-		if (val.state.value > 0)
-		{
-			int d = distances[val.state] + 1;
-			if ((distances.find(State{val.state.value - 1}) != distances.end()
-				&& distances.find(State{val.state.value - 1})->second > d)
-				|| distances.find(State{val.state.value - 1}) == distances.end())
-			{
-				distances[State{val.state.value - 1 }] = d;
-				fathers[State{val.state.value - 1}] = val.state;
-				tmp.push(Elem({.distance= distances[State{val.state.value - 1}], .state= State({val.state.value - 1})}));
-				std::cout << "Voisin1 -> " << val.state.value - 1 << " distance -> ";
-				std::cout << distances[State{val.state.value - 1}] << " parent -> " << fathers[State{val.state.value - 1}].value << std::endl;
-			}
-		}
-		if (val.state.value < 5)
-		{
-			int d = distances[val.state] + 3;
-			if ((distances.find(State{val.state.value + 1}) != distances.end()
-				&& distances.find(State{val.state.value + 1})->second > d)
-				|| distances.find(State{val.state.value + 1}) == distances.end())
-			{
-				distances[State{val.state.value + 1 }] = d;
-				fathers[State{val.state.value + 1}] = val.state;
-				tmp.push(Elem({.distance= distances[State{val.state.value + 1}], .state= State({val.state.value + 1})}));
-				std::cout << "Voisin2 -> " << val.state.value + 1 << " distance -> ";
-				std::cout << distances[State{val.state.value + 1}] << " parent -> " << fathers[State{val.state.value + 1}].value << std::endl;
-			}
-		}
 		tmp.pop();
+		if (val.state == dest)
+		{
+			std::cout << "Dest atteind donc on stop" << std::endl;
+			break;
+		}
+		if (val.distance > distances[val.state])
+		{
+			std::cout << "Distance connue plus petite donc on ignore" << std::endl;
+			continue;
+		}
+		std::cout << "Traitement de " << val.state.value << std::endl;
+		auto neigh = graph.find(val.state);
+		if (neigh == graph.end())
+			std::cout << "Ne possede pas de voisins" << std::endl;
+		else
+		{
+			for (auto n : neigh->second)
+			{
+				int d = distances[val.state] + n.second;
+				if ((distances.find(n.first) != distances.end()
+					&& distances.find(n.first)->second > d)
+					|| distances.find(n.first) == distances.end())
+				{
+					distances[n.first] = d;
+					fathers[n.first] = val.state;
+					tmp.push(Elem({.distance= distances[n.first], .state= n.first}));
+					std::cout << "Voisin1 -> " << n.first.value << " distance -> ";
+					std::cout << distances[n.first] << " parent -> " << fathers[n.first].value << std::endl;
+				}
+			}
+		}
 	}
 	std::cout << "Distance entre " << start.value << " et " << dest.value << " -> " << distances[dest] << std::endl;
 	std::cout << "Parcours entre les deux points : " << std::endl;
