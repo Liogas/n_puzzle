@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 11:32:06 by glions            #+#    #+#             */
-/*   Updated: 2026/01/23 12:50:27 by glions           ###   ########.fr       */
+/*   Updated: 2026/01/24 01:36:14 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,34 +15,34 @@
 
 # include <iostream>
 # include <vector>
-
-class State
-{
-	public:
-		State(std::vector<std::vector<int>> grid);
-		std::vector<std::vector<int>>	getValues() const;
-		bool 							operator==(const State &other) const;
-		bool 							operator!=(const State &other) const;
-		Pos								getEmptySlot();
-		State							*genNeighbor(Direction dir);
-
-	private:
-		std::vector<std::vector<int>> values;
-};
-
-enum	Direction
-{
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT
-};
+# include <cstdlib>
+# include <unordered_map>
 
 struct Pos
 {
 	int	y;
 	int	x;
 };
+
+class State
+{
+	public:
+		State(std::vector<std::vector<int>> grid);
+		
+		const std::vector<std::vector<int>>	&getValues() const;
+		bool 								operator==(const State &o) const;
+		bool 								operator!=(const State &o) const;
+		Pos									getEmptySlot() const;
+		std::vector<State>					genNeighbors();
+		void								genNeighbor(std::vector<State> &n,
+												int dirY, int dirX);
+
+	private:
+		std::vector<std::vector<int>> values;
+};
+
+std::ostream &operator<<(std::ostream &os, const State &state);
+	
 
 struct StateHash
 {
@@ -72,5 +72,7 @@ struct Cmp
 		return (a.distance + a.estimate > b.distance + b.estimate);
 	}
 };
+
+
 
 #endif

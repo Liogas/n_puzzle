@@ -2,7 +2,9 @@ CC 		= c++
 CFLAGS	= -Wall -Wextra -Werror -g
 NAME	= nPuzzle
 
-SRCS		= main.cpp
+SRCS		= main.cpp \
+              State.cpp
+				
 OBJS		= $(SRCS:.cpp=.o)
 
 %.o: %.cpp

@@ -6,34 +6,34 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 11:58:38 by glions            #+#    #+#             */
-/*   Updated: 2026/01/23 12:30:58 by glions           ###   ########.fr       */
+/*   Updated: 2026/01/24 01:46:18 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "State.hpp"
+#include <ostream>
+
 
 State::State(std::vector<std::vector<int>> grid) : 
 	values(grid)
-{
+{}
 
-}
-
-std::vector<std::vector<int>>	State::getValues() const
+const std::vector<std::vector<int>>	&State::getValues() const
 {
 	return (this->values);
 }
 
 bool	State::operator==(const State &other) const
-		{
-			return (values == other.getValues());
-		}
+{
+	return (values == other.getValues());
+}
 
 bool	State::operator!=(const State &other) const
 {
 	return (values != other.getValues());
 }
 
-Pos	State::getEmptySlot()
+Pos	State::getEmptySlot() const
 {
 	for (size_t i = 0; i < this->values.size(); i++)
 	{
@@ -46,45 +46,39 @@ Pos	State::getEmptySlot()
 	return (Pos{.y= -1, .x= -1});
 }
 
-State	*State::genNeighbor(Direction dir)
+void	State::genNeighbor(std::vector<State> &n, int dirY, int dirX)
 {
-	State 	*newState = this;
-	Pos		emptySlot = newState->getEmptySlot();
-	if (emptySlot.x == -1 || emptySlot.y)
-		return (NULL);
-	switch (dir)
+	State newState = *this;
+	Pos	emptySlot = newState.getEmptySlot();
+	std::swap(newState.values[emptySlot.y][emptySlot.x],
+		newState.values[emptySlot.y + dirY][emptySlot.x + dirX]);
+	n.push_back(newState);
+}
+
+std::vector<State>	State::genNeighbors()
+{
+	std::vector<State> neighbors;
+	Pos emptySlot = this->getEmptySlot();
+	if (emptySlot.y > 0)
+		genNeighbor(neighbors, -1, 0);
+	if (emptySlot.y < (int)this->values.size() - 1) 
+		genNeighbor(neighbors, 1, 0);
+	if (emptySlot.x > 0) 
+		genNeighbor(neighbors, 0, -1);
+	if (emptySlot.x < (int)this->values[emptySlot.y].size() - 1) 
+		genNeighbor(neighbors, 0, 1);
+	return (neighbors);
+}
+
+std::ostream &operator<<(std::ostream &os, const State &state)
+{
+	for (size_t i = 0; i < state.getValues().size(); i++)
 	{
-		case UP:
-			if (emptySlot.y > 0) 
-				std::swap(newState->values[emptySlot.y][emptySlot.x],
-						newState->values[emptySlot.y - 1][emptySlot.x]);
-			else
-				return (NULL);
-			break ;
-		case DOWN:
-			if (emptySlot.y < newState->values.size() - 1) 
-				std::swap(newState->values[emptySlot.y][emptySlot.x],
-						newState->values[emptySlot.y + 1][emptySlot.x]);
-			else
-				return (NULL);
-			break ;
-		case LEFT:
-			if (emptySlot.x > 0) 
-				std::swap(newState->values[emptySlot.y][emptySlot.x],
-						newState->values[emptySlot.y][emptySlot.x - 1]);
-			else
-				return (NULL);
-			break ;
-		case RIGHT:
-			if (emptySlot.x < newState->values[emptySlot.y].size() - 1) 
-				std::swap(newState->values[emptySlot.y][emptySlot.x],
-						newState->values[emptySlot.y][emptySlot.x + 1]);
-			else
-				return (NULL);
-			break ;
-		default:
-			std::cerr << "Direction unknown" << std::endl;
-			return (NULL);
+		for (size_t j = 0; j < state.getValues()[i].size(); j++)
+		{
+			os << " " << state.getValues()[i][j];
+		}
+		os << std::endl;
 	}
-	return (newState);
+	return (os);
 }
