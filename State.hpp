@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 11:32:06 by glions            #+#    #+#             */
-/*   Updated: 2026/01/24 01:36:14 by glions           ###   ########.fr       */
+/*   Updated: 2026/01/27 13:19:27 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <vector>
 # include <cstdlib>
 # include <unordered_map>
+# include <fstream>
 
 struct Pos
 {
@@ -56,6 +57,13 @@ struct StateHash
 		}
 		return (h);
 	}
+};
+
+struct ParsingInfo
+{
+	std::vector<std::vector<int>> 	grid;
+	bool							solvable;
+	int								size;
 };
 
 struct	Elem
