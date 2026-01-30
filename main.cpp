@@ -6,12 +6,13 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/01/29 15:17:02 by glions           ###   ########.fr       */
+/*   Updated: 2026/01/30 12:42:39 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "State.hpp"
 #include <unordered_map>
+#include <unordered_set>
 #include <queue>
 #include <sstream>
 #include <algorithm>
@@ -48,6 +49,8 @@ int	algo(State &start, State &dest, int heur(const State&, const State&))
 	std::unordered_map<State, int, StateHash> distances;
 	std::unordered_map<State, State, StateHash> fathers;
 	std::priority_queue<Elem, std::vector<Elem>, Cmp> tmp;
+	std::unordered_set<State, StateHash> closed;
+	int	ddd = 0;
 
 	distances[start] = 0;
 	tmp.push( Elem {
@@ -59,23 +62,32 @@ int	algo(State &start, State &dest, int heur(const State&, const State&))
 	{
 		Elem curr = tmp.top();
 		tmp.pop();
-		std::cout << "State actuel traite : " << curr.state << std::endl;
+		if (closed.find(curr.state) != closed.end())
+		{
+			std::cout << "Deja traite (" << ddd++ << ")" << std::endl;
+    		continue;
+		}
+		std::cout << "Pas encore traite" << std::endl;
+
+		closed.insert(curr.state);
+		// std::cout << "State actuel traite : " << curr.state << std::endl;
 		if (curr.state == dest)
 		{
 			std::cout << "Dest atteind donc on stop" << std::endl;
 			break;
 		}
-		if (curr.distance > distances[curr.state])
-		{
-			std::cout << "Ignoré car plus petite distance existe" << std::endl;
-			continue;
-		}
+		// if (curr.distance > distances[curr.state])
+		// {
+		// 	std::cout << "Ignoré car plus petite distance existe" << std::endl;
+		// 	continue;
+		// }
 		std::vector<State> neighbors = curr.state.genNeighbors();
 		for (State n : neighbors)
 		{
+			if (closed.find(n) != closed.end())
+				continue ;
 			int d = distances[curr.state] + 1;
-			auto it = distances.find(n);
-			if (it == distances.end() || it->second > d)
+			if (distances.find(n) == distances.end() || d < distances[n])
 			{
 				distances[n] = d;
 				fathers.erase(n);
@@ -109,7 +121,7 @@ int	algo(State &start, State &dest, int heur(const State&, const State&))
 	return (0);
 }
 
-bool testSolvable(std::vector<std::vector<int>> grid)
+bool parity(std::vector<std::vector<int>> grid)
 {
 	std::vector<int> 	list;
 	int				 	row = 0;
@@ -132,7 +144,7 @@ bool testSolvable(std::vector<std::vector<int>> grid)
 	}
 	if (grid.size() % 2 == 0)
 	{
-		for (int i = grid.size() - 1; i >= 0; i++)
+		for (int i = grid.size() - 1; i >= 0; i--)
 		{
 			row++;
 			for (size_t j = 0; j < grid[i].size(); j++)
@@ -144,15 +156,10 @@ bool testSolvable(std::vector<std::vector<int>> grid)
 				}
 			}
 		}
-		if (row % 2 == 0 && nbInvers % 2 == 0)
-			return (false);
-		if (row % 2 != 0 && nbInvers % 2 != 0)
-			return (false);
 	}
-	if (grid.size() % 2 != 0 && nbInvers % 2 != 0)
-		return (false);
-	
-	return (true);
+	if (grid.size() % 2 != 0)
+		return (nbInvers % 2);
+	return ((nbInvers + row) % 2);
 }
 
 bool parsing(char *pathFile, ParsingInfo &info)
@@ -207,52 +214,36 @@ bool parsing(char *pathFile, ParsingInfo &info)
 	return (true);
 }
 
-std::vector<std::vector<int>> genFinalGrid(std::vector<std::vector<int>> grid)
+std::vector<std::vector<int>> genFinalGrid(std::vector<std::vector<int>> &grid)
 {
-	std::vector<int> list;
+	int	n = grid.size();
+	std::vector<int> values;
+	std::vector<std::vector<int>> g(n, std::vector<int>(n, -1));
 
-	for (auto &row : grid)
-		for (auto val : row)
-			list.push_back(val);
-	
-	std::sort(list.begin(), list.end());
-	for (auto val : list)
-		std::cout << " " << val << std::endl;
-
-	std::vector<std::vector<int>> g;
-	int pos[2] = {0, 0};
-	int dep[2] = {0, 1};
-	int	limit[4] = {0, (int)grid.size() - 1, 0, (int)grid.size() - 1};
-
-	for (size_t i = 1; i < list.size(); i++)
+	for (const auto &row : grid)
+		for (int val : row)
+		{
+			if (val != 0)
+				values.push_back(val);
+		}
+	std::sort(values.begin(), values.end());
+	values.push_back(0);
+	int	dir[4] = {0, n - 1, 0, n - 1};
+	int	idx = 0;
+	while (dir[0] <= dir[1] && dir[2] <= dir[3])
 	{
-		g[pos[0]][pos[1]] = list[i];
-		if (dep[1] == 1 && pos[1] == limit[3])
-		{
-			limit[0] += 1;
-			dep[1] = 0;
-			dep[0] = 1;
-		}
-		else if (dep[1] == -1 && pos[1] == limit[2])
-		{
-			limit[1] -= 1;
-			dep[1] = 0;
-			dep[0] = -1;
-		}
-		else if (dep[0] == 1 && pos[0] == limit[1])
-		{
-			limit[3] -= 1;
-			dep[1] = 0;
-			dep[0] = -1;
-		}
-		else if (dep[0] == -1 && pos[0] == limit[0])
-		{
-			limit[2] += 1;
-			dep[1] = 0;
-			dep[0] = 1;
-		}
-		pos[0] += dep[0];
-		pos[1] += dep[1];
+		for (int x = dir[2]; x <= dir[3]; x++)
+			g[dir[0]][x] = values[idx++];
+		dir[0]++;
+		for (int y = dir[0]; y <= dir[1]; y++)
+			g[y][dir[3]] = values[idx++];
+		dir[3]--;
+		for (int x = dir[3]; x >= dir[2]; x--)
+			g[dir[1]][x] = values[idx++];
+		dir[1]--;
+		for (int y = dir[1]; y >= dir[0]; y--)
+			g[y][dir[2]] = values[idx++];
+		dir[2]++;
 	}
 	return (g);
 }
@@ -274,37 +265,27 @@ int	main(int ac, char **av)
 
 	std::vector<std::vector<int>> finalGrid = genFinalGrid(parsingInfo.grid);
 
-	for (auto &row : parsingInfo.grid) {
+	State start(parsingInfo.grid);
+	State dest(finalGrid);
+
+	for (auto &row : start.getValues()) {
         for (auto val : row)
 			std::cout << " " << val;
 		std::cout << std::endl;
     }
 	std::cout << std::endl << std::endl;
-	for (auto &row : finalGrid) {
+	for (auto &row : dest.getValues()) {
         for (auto val : row)
 			std::cout << " " << val;
 		std::cout << std::endl;
     }
 
+	if (parity(start.getValues()) != parity(dest.getValues()))
+	{
+		std::cout << "Grille non solvable" << std::endl;
+		return (0);
+	}
 
-	// State start = {{{ 
-	// 	{7, 2, 1}, 
-	// 	{4, 6, 0}, 
-	// 	{5, 8, 3} 
-	// }}};
-
-	// State dest = {{{ 
-	// 	{1, 2, 3}, 
-	// 	{4, 5, 6}, 
-	// 	{7, 8, 0} 
-	// }}};
-
-	// if (!testSolvable(start.getValues()))
-	// {
-	// 	std::cout << "Grille non solvable" << std::endl;
-	// 	return (0);
-	// }
-
-	// return (algo(start, dest, manhattan));
+	return (algo(start, dest, manhattan));
 	return (0);
 }
