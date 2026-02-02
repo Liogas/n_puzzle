@@ -1,27 +1,37 @@
-CC 		= c++
-CFLAGS	= -Wall -Wextra -Werror -g
-NAME	= nPuzzle
+CC 			= c++
+CFLAGS		= -Wall -Wextra -Werror -g3
+INCLUDES	= -I./includes/
 
-SRCS		= main.cpp \
-              State.cpp
-				
-OBJS		= $(SRCS:.cpp=.o)
+NAME		= nPuzzle
 
-%.o: %.cpp
-	@$(CC) $(CFLAGS) -o $@ -c $^
+SRCS_DIR 	= srcs
+OBJS_DIR 	= objs
+SRCS		= $(SRCS_DIR)/main.cpp \
+              $(SRCS_DIR)/algo/AlgoStar.cpp \
+              $(SRCS_DIR)/algo/Node.cpp \
+              $(SRCS_DIR)/parsing/parsing.cpp
+
+OBJS 		= $(SRCS:$(SRCS_DIR)/%.cpp=$(OBJS_DIR)/%.o)
+
+all: $(NAME)
+
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	@echo "👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌"
 
 run: $(NAME)
 	@./$(NAME)
 
 clean:
-	@rm -rf $(OBJS)
+	rm -rf $(OBJS_DIR)
 
 fclean: clean
 	@rm -rf $(NAME)
 
 re : fclean $(NAME)
 
-.PHONY: clean fclean re
+.PHONY: all clean fclean re
