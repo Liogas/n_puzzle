@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:13:26 by glions            #+#    #+#             */
-/*   Updated: 2026/02/02 12:06:19 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/05 19:36:54 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,52 @@
 AlgoStar::AlgoStar(const Node &start, const Node &goal):
 	_start(start),
 	_goal(goal),
+	_heuristic(nullptr),
 	_opened(),
 	_closed(),
-	_heuristics()
+	_distances(),
+	_heuristics()	
 {
 	std::cout << "AlgoStar default constructor called" << std::endl;
 	this->_opened.push(start);
-}
-
-bool	AlgoStar::addHeuristic(HeuristicType h, Heuristic fn)
-{
-	if (this->_heuristics.find(h) != this->_heuristics.end())
-	{
-		std::cerr << "Heuristic already stocked" << std::endl;
-		return (false);
-	}
-	this->_heuristics[h] = fn;
-	return (true);
+	this->_distances[this->_start] = 0;
+	this->_heuristics[HeuristicType::Manhattan] = distManhattan;
 }
 
 bool	AlgoStar::start(HeuristicType h)
 {
-	if (this->_heuristics.find(h) == this->_heuristics.end())
+	this->setHeuristic(h);
+	if (this->_opened.size() != 1 || this->_closed.size() != 0)
 	{
-		std::cerr << "Heuristic unknown" << std::endl;
+		std::cerr << "Algo already started" << std::endl;
 		return (false);
+	} 
+	while (!this->_opened.empty())
+	{
+		Node curr = this->_opened.top();
+		this->_opened.pop();
+		if (curr == this->_goal)
+			break;
+		this->_closed.insert(curr);
+		for (Node &n : curr.genNeighbors())
+		{
+			if (this->_closed.count(n))
+        		continue;
+			n.setG(this->_distances[curr] + 1);
+			if (!this->_distances.count(n) || n.getG() < this->_distances[n])
+			{
+				this->_distances[n] = n.getG();
+				n.setH(this->_heuristic(n, this->_goal));
+				n.setF(n.getG() + n.getH());
+				this->_opened.push(n);
+			}
+		}
 	}
+	std::cout << "Result : " << this->_distances[this->_goal] << std::endl;
 	return (true);
+}
+
+void	AlgoStar::setHeuristic(HeuristicType h)
+{
+	this->_heuristic = this->_heuristics[h];
 }

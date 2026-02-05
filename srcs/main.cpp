@@ -6,12 +6,13 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/02/02 12:46:31 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/05 16:30:22 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AlgoStar.hpp"
 #include "parsing.hpp"
+#include "heuristics.hpp"
 
 bool parity(std::vector<std::vector<int>> grid)
 {
@@ -93,20 +94,20 @@ int	main(int ac, char **av)
 	ParsingInfo	parsingInfo;
 	if (ac != 2)
 	{
-		std::cout << "Necessite un fichier d'entree contenant la grille" << std::endl;
+		std::cout << "File missing -> use ./npuzzle-gen.py [-s] [-u] [-i]" << std::endl;
 		return (1);
 	}
 	
 	if (!parsing(av[1], parsingInfo))
 	{
-		std::cerr << "Fichier non conforme : " << av[1] << std::endl;
+		std::cerr << "File not conform : " << av[1] << std::endl;
 		return (1);
 	}
 
 	std::vector<std::vector<int>> finalGrid = genFinalGrid(parsingInfo.grid);
 
-	Node start(parsingInfo.grid, 0, 0);
-	Node dest(finalGrid, -1, -1);
+	Node start(parsingInfo.grid, 0, 0, nullptr);
+	Node dest(finalGrid, -1, -1, nullptr);
 
 	for (auto &row : start.getGrid()) {
         for (auto val : row)
@@ -127,5 +128,6 @@ int	main(int ac, char **av)
 	}
 	
 	AlgoStar algo(start, dest);
+	algo.start(HeuristicType::Manhattan);
 	return (0);
 }

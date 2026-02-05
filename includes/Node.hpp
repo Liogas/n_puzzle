@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:02:04 by glions            #+#    #+#             */
-/*   Updated: 2026/02/02 12:09:26 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/05 19:22:11 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,42 @@
 # include <queue>
 # include <iostream>
 
+struct Pos
+{
+	int	y;
+	int	x;
+};
+
 class Node
 {
 	public:
-		Node(const std::vector<std::vector<int>> &grid, int g, int h);
+		// constructor //
+		Node(const std::vector<std::vector<int>> &grid, int g, int h, Node *father);
+		// getters //
+		int									getF() const;
+		int									getH() const;
+		int									getG() const;
 		const std::vector<std::vector<int>>	&getGrid() const;
-		int	getF() const;
+		// setters //
+		void	setF(const int &f);
+		void	setH(const int &h);
+		void	setG(const int &g);
+		// overrides //
+		bool operator==(const Node &o) const;
+		bool operator!=(const Node &o) const;
+		// methods //
+		std::vector<Node>	genNeighbors();
 	private:
-		int	_g;
-		int	_h;
-		int	_f;
-		std::vector<std::vector<int>> _grid;
-		Node	*_father;
+		// props //
+		int								_g;
+		int								_h;
+		int								_f;
+		Node							*_father;
+		std::vector<std::vector<int>>	_grid;
+		// methods //
+		void	genNeighbor(std::vector<Node> &n,
+					int dirY, int dirX);
+		Pos		getEmptySlot() const;
 };
 
 struct NodeHash
