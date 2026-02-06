@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/02/05 16:30:22 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/06 12:55:46 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,5 +129,6 @@ int	main(int ac, char **av)
 	
 	AlgoStar algo(start, dest);
 	algo.start(HeuristicType::Manhattan);
+	// algo.start(HeuristicType::LinearConflict);
 	return (0);
 }

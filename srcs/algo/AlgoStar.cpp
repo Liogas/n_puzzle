@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:13:26 by glions            #+#    #+#             */
-/*   Updated: 2026/02/05 19:36:54 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/06 12:49:29 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ AlgoStar::AlgoStar(const Node &start, const Node &goal):
 	this->_opened.push(start);
 	this->_distances[this->_start] = 0;
 	this->_heuristics[HeuristicType::Manhattan] = distManhattan;
+	this->_heuristics[HeuristicType::LinearConflict] = distLinearConflict;
 }
 
 bool	AlgoStar::start(HeuristicType h)

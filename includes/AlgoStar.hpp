@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 10:53:17 by glions            #+#    #+#             */
-/*   Updated: 2026/02/05 19:07:53 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/06 11:41:51 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@
 
 enum class HeuristicType
 {
-	Manhattan
+	Manhattan,
+	LinearConflict
 };
 
 using Heuristic = std::function<int(const Node&, const Node&)>;
