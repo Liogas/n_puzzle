@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:53:02 by glions            #+#    #+#             */
-/*   Updated: 2026/02/05 19:23:46 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/09 12:41:07 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,24 @@
 
 // PUBLIC //
 
-Node::Node(const std::vector<std::vector<int>> &grid, int g, int h, Node *father):
+Node::Node():
+	_g(-1),
+	_h(-1),
+	_f(-1),
+	_grid()
+{
+
+}
+
+
+Node::Node(const std::vector<std::vector<int>> &grid, int g, int h):
 	_g(g),
 	_h(h),
 	_f(g + h),
-	_father(father),
 	_grid(grid)
 {
 	std::cout << "Node default constructor called" << std::endl;
 	std::cout << this->_g << ";" << this->_h << ";" << this->_f << std::endl;
-	(void)this->_father;
 }
 
 std::vector<Node>	Node::genNeighbors()
@@ -86,6 +94,7 @@ void	Node::setH(const int &h)
 	this->_h = h;
 }
 
+
 // PRIVATE //
 
 Pos	Node::getEmptySlot() const
@@ -107,8 +116,21 @@ void	Node::genNeighbor(std::vector<Node> &n, int dirY, int dirX)
 	Pos	emptySlot = newState.getEmptySlot();
 	std::swap(newState._grid[emptySlot.y][emptySlot.x],
 		newState._grid[emptySlot.y + dirY][emptySlot.x + dirX]);
-	newState._father = this;
 	n.push_back(newState);
+}
+
+
+std::ostream &operator<<(std::ostream &os, const Node &node)
+{
+	for (size_t i = 0; i < node.getGrid().size(); i++)
+	{
+		for (size_t j = 0; j < node.getGrid()[i].size(); j++)
+		{
+			os << " " << node.getGrid()[i][j];
+		}
+		os << std::endl;
+	}
+	return (os);
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:02:04 by glions            #+#    #+#             */
-/*   Updated: 2026/02/05 19:22:11 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/09 12:40:22 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ class Node
 {
 	public:
 		// constructor //
-		Node(const std::vector<std::vector<int>> &grid, int g, int h, Node *father);
+		Node();
+		Node(const std::vector<std::vector<int>> &grid, int g, int h);
 		// getters //
 		int									getF() const;
 		int									getH() const;
@@ -46,13 +47,14 @@ class Node
 		int								_g;
 		int								_h;
 		int								_f;
-		Node							*_father;
 		std::vector<std::vector<int>>	_grid;
 		// methods //
 		void	genNeighbor(std::vector<Node> &n,
 					int dirY, int dirX);
 		Pos		getEmptySlot() const;
 };
+
+std::ostream &operator<<(std::ostream &os, const Node &node);
 
 struct NodeHash
 {

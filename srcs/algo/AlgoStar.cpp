@@ -6,26 +6,50 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:13:26 by glions            #+#    #+#             */
-/*   Updated: 2026/02/06 12:49:29 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/09 12:36:32 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "AlgoStar.hpp"
 
 AlgoStar::AlgoStar(const Node &start, const Node &goal):
+	_expandedNodes(0),
+	_maxStates(0),
 	_start(start),
 	_goal(goal),
 	_heuristic(nullptr),
 	_opened(),
 	_closed(),
 	_distances(),
+	_fathers(),
 	_heuristics()	
 {
+	(void)this->_expandedNodes;
+	(void)this->_maxStates;
 	std::cout << "AlgoStar default constructor called" << std::endl;
 	this->_opened.push(start);
 	this->_distances[this->_start] = 0;
 	this->_heuristics[HeuristicType::Manhattan] = distManhattan;
 	this->_heuristics[HeuristicType::LinearConflict] = distLinearConflict;
+}
+
+void	AlgoStar::showResult()
+{
+	std::cout << "Result: "<< std::endl;
+	std::cout << "Time complexity: " << this->_expandedNodes << std::endl;
+	std::cout << "Size complexity: " << this->_maxStates << std::endl;
+	std::cout << "Number of moves: " << this->_distances[this->_goal] << std::endl;
+	std::cout << "Path: " << std::endl;
+	std::deque<Node> path;
+	Node curr = this->_goal;
+	while (curr != this->_start)
+	{
+		path.push_front(curr);
+		curr = this->_fathers[curr];
+	}
+	path.push_front(this->_start);
+	for (const Node &n : path)
+		std::cout << n << std::endl << std::endl;
 }
 
 bool	AlgoStar::start(HeuristicType h)
@@ -40,6 +64,9 @@ bool	AlgoStar::start(HeuristicType h)
 	{
 		Node curr = this->_opened.top();
 		this->_opened.pop();
+		this->_expandedNodes++;
+		if (this->_opened.size() + this->_closed.size() > (unsigned long)this->_maxStates)
+			this->_maxStates = this->_opened.size() + this->_closed.size();
 		if (curr == this->_goal)
 			break;
 		this->_closed.insert(curr);
@@ -51,13 +78,14 @@ bool	AlgoStar::start(HeuristicType h)
 			if (!this->_distances.count(n) || n.getG() < this->_distances[n])
 			{
 				this->_distances[n] = n.getG();
+				this->_fathers[n] =  curr;
 				n.setH(this->_heuristic(n, this->_goal));
 				n.setF(n.getG() + n.getH());
 				this->_opened.push(n);
 			}
 		}
 	}
-	std::cout << "Result : " << this->_distances[this->_goal] << std::endl;
+	this->showResult();
 	return (true);
 }
 

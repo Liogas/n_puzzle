@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:52:25 by glions            #+#    #+#             */
-/*   Updated: 2026/02/06 12:50:18 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/09 10:32:12 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,16 @@ int	distLinearConflict(const Node &a, const Node &b)
 	int	dist = distManhattan(a, b);
 	for (size_t i = 0; i < a.getGrid().size(); i++)
 		dist += 2 * countLinearConflict(a.getGrid()[i], b.getGrid()[i]);
+	for (size_t i = 0; i < a.getGrid().size(); i++)
+	{
+		std::vector<int> colA;
+		std::vector<int> colB;
+		for (size_t j = 0; j < a.getGrid().size(); j++)
+		{
+			colA.push_back(a.getGrid()[j][i]);
+			colB.push_back(b.getGrid()[j][i]);
+		}
+		dist += 2 * countLinearConflict(colA, colB);
+	}
 	return (dist);
 }
