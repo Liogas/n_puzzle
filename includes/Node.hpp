@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:02:04 by glions            #+#    #+#             */
-/*   Updated: 2026/02/09 12:40:22 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/11 16:08:18 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class Node
 		void	setF(const int &f);
 		void	setH(const int &h);
 		void	setG(const int &g);
+		void	setValueGrid(int y, int x, int val);
 		// overrides //
 		bool operator==(const Node &o) const;
 		bool operator!=(const Node &o) const;

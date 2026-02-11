@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:53:02 by glions            #+#    #+#             */
-/*   Updated: 2026/02/09 12:41:07 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/11 16:10:00 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,14 @@ void	Node::setG(const int &g)
 void	Node::setH(const int &h)
 {
 	this->_h = h;
+}
+
+void	Node::setValueGrid(int y, int x, int val)
+{
+	if (y < 0 || y >= this->_grid.size() || x < 0 || x >= this->_grid.size())
+		std::cerr << "X or Y invalid" << std::endl;
+	else
+		this->_grid[y][x] = val;
 }
 
 

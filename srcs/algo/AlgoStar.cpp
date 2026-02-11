@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:13:26 by glions            #+#    #+#             */
-/*   Updated: 2026/02/11 12:24:13 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/11 17:19:43 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@ AlgoStar::AlgoStar(const Node &start, const Node &goal):
 	_distances(),
 	_fathers(),
 	_heuristics(),
-	_patterns()
+	_patterns(),
+	_pdbs()
 {
-	(void)this->_expandedNodes;
-	(void)this->_maxStates;
 	std::cout << "AlgoStar default constructor called" << std::endl;
 	this->_opened.push(start);
 	this->_distances[this->_start] = 0;
@@ -61,6 +60,11 @@ bool	AlgoStar::start(HeuristicType h)
 		std::cerr << "Algo already started" << std::endl;
 		return (false);
 	} 
+	if (h == HeuristicType::PDB)
+	{
+		this->buildPatterns();
+		this->buildAllPDBs();
+	}
 	while (!this->_opened.empty())
 	{
 		Node curr = this->_opened.top();
@@ -90,18 +94,72 @@ bool	AlgoStar::start(HeuristicType h)
 	return (true);
 }
 
+// PDBTable	AlgoStar::buildPDB(std::unordered_set<int> &pattern)
+// {
+// 	PDBTable	pdb();
+
+// 	std::queue<Node> q;
+// 	std::unordered_map<Node, int, NodeHash> dist();
+// 	q.push(this->_goal);
+// 	dist[this->_goal] = 0;
+// 	while (!q.empty())
+// 	{
+		
+// 	}
+// }
+
+void	AlgoStar::buildAllPDBs()
+{
+	for (auto &pattern : this->_patterns)
+		this->_pdbs.push_back(this->buildPDB(pattern));
+}
+
 void	AlgoStar::buildPatterns()
 {
-	int	nbPatterns = this->_start.getGrid().size() * this->_start.getGrid().size() / 3;
-	std::vector<int> currP;
+	int	n = this->_start.getGrid().size() * this->_start.getGrid().size();
+	int	patternSize = n / 2;
+	std::unordered_set<int> currPattern;
 	int	k = 0;
 	for (size_t i = 0; i < this->_start.getGrid().size(); i++)
 	{
 		for (size_t j = 0; j < this->_start.getGrid()[i].size(); j++)
 		{
-			if (k % 3 == 0)
+			if (this->_start.getGrid()[i][j] == 0)
+				continue ;
+			currPattern.insert(this->_start.getGrid()[i][j]);
+			k++;
+			if (k == patternSize)
+			{
+				this->_patterns.push_back(currPattern);
+				currPattern.clear();
+				k = 0;
+			}
 		}
 	}
+	if (!currPattern.empty())
+		this->_patterns.push_back(currPattern);
+}
+
+Node	AlgoStar::project(Node curr, std::unordered_set<int> &pattern)
+{
+	Node n = curr;
+	for (size_t i = 0; i < n.getGrid().size(); i++)
+	{
+		for (size_t j = 0; j < n.getGrid().size(); j++)
+		{
+			if (!pattern.count(n.getGrid()[i][j]) && n.getGrid()[i][j] != 0)
+				n.setValueGrid(i, j, -1);
+		}
+	}
+	return (n);
+}
+
+void	AlgoStar::bfs()
+{
+	std::unordered_map<Node, int, NodeHash> pdb;
+	std::queue<Node> queue;
+	queue.push(this->_goal);
+	pdb[this->project(this->_goal, )]
 }
 
 void	AlgoStar::setHeuristic(HeuristicType h)
