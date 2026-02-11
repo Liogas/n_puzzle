@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:13:26 by glions            #+#    #+#             */
-/*   Updated: 2026/02/09 12:36:32 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/11 12:24:13 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ AlgoStar::AlgoStar(const Node &start, const Node &goal):
 	_closed(),
 	_distances(),
 	_fathers(),
-	_heuristics()	
+	_heuristics(),
+	_patterns()
 {
 	(void)this->_expandedNodes;
 	(void)this->_maxStates;
@@ -87,6 +88,20 @@ bool	AlgoStar::start(HeuristicType h)
 	}
 	this->showResult();
 	return (true);
+}
+
+void	AlgoStar::buildPatterns()
+{
+	int	nbPatterns = this->_start.getGrid().size() * this->_start.getGrid().size() / 3;
+	std::vector<int> currP;
+	int	k = 0;
+	for (size_t i = 0; i < this->_start.getGrid().size(); i++)
+	{
+		for (size_t j = 0; j < this->_start.getGrid()[i].size(); j++)
+		{
+			if (k % 3 == 0)
+		}
+	}
 }
 
 void	AlgoStar::setHeuristic(HeuristicType h)

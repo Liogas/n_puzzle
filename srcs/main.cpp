@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/02/09 12:37:39 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/11 10:35:45 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,23 +92,30 @@ std::vector<std::vector<int>> genFinalGrid(std::vector<std::vector<int>> &grid)
 int	main(int ac, char **av)
 {
 	ParsingInfo	parsingInfo;
-	if (ac != 2)
+	HeuristicType hType;
+	if (ac != 3)
 	{
-		std::cout << "File missing -> use ./npuzzle-gen.py [-s] [-u] [-i]" << std::endl;
+		std::cout << "args missing : ./nPuzzle [file] [heuristic]" << std::endl;
 		return (1);
 	}
-	
 	if (!parsing(av[1], parsingInfo))
 	{
 		std::cerr << "File not conform : " << av[1] << std::endl;
 		return (1);
 	}
-
+	std::string heuristic(av[2]);
+	if (heuristic == "manhattan")
+		hType = HeuristicType::Manhattan;
+	else if (heuristic == "linearconflict")
+		hType = HeuristicType::LinearConflict;
+	else
+	{
+		std::cerr << "Heuristic unknown ! try -> manhattan | linearConflict" << std::endl;
+		return (1);
+	}
 	std::vector<std::vector<int>> finalGrid = genFinalGrid(parsingInfo.grid);
-
 	Node start(parsingInfo.grid, 0, 0);
 	Node dest(finalGrid, -1, -1);
-
 	for (auto &row : start.getGrid()) {
         for (auto val : row)
 			std::cout << " " << val;
@@ -120,15 +127,12 @@ int	main(int ac, char **av)
 			std::cout << " " << val;
 		std::cout << std::endl;
     }
-
 	if (parity(start.getGrid()) != parity(dest.getGrid()))
 	{
 		std::cout << "Grid unsolvable" << std::endl;
 		return (0);
 	}
-	
 	AlgoStar algo(start, dest);
-	// algo.start(HeuristicType::Manhattan);
-	algo.start(HeuristicType::LinearConflict);
+	algo.start(hType);
 	return (0);
 }

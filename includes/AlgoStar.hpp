@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 10:53:17 by glions            #+#    #+#             */
-/*   Updated: 2026/02/09 12:31:28 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/11 12:15:49 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ class AlgoStar
 		// constructor //
 		AlgoStar(const Node &start, const Node &goal);
 		// methods //
-		bool start(HeuristicType h);
+		bool 	start(HeuristicType h);
+		void	buildPatterns();
 	private:
 		// props //
 		int														_expandedNodes;
@@ -49,6 +50,7 @@ class AlgoStar
 		std::unordered_map<Node, int, NodeHash>					_distances;
 		std::unordered_map<Node, Node, NodeHash>				_fathers;
 		std::unordered_map<HeuristicType, Heuristic>			_heuristics;
+		std::vector<std::vector<int>>							_patterns;
 		// methods //
 		void	setHeuristic(HeuristicType h);
 		void 	showResult();
