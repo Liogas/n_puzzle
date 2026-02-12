@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/02/11 10:35:45 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/12 14:37:48 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ int	main(int ac, char **av)
 		hType = HeuristicType::Manhattan;
 	else if (heuristic == "linearconflict")
 		hType = HeuristicType::LinearConflict;
+	else if (heuristic == "pdb")
+		hType = HeuristicType::PDB;
 	else
 	{
 		std::cerr << "Heuristic unknown ! try -> manhattan | linearConflict" << std::endl;

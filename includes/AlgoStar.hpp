@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 10:53:17 by glions            #+#    #+#             */
-/*   Updated: 2026/02/11 17:15:21 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/12 14:31:42 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@
 # include <algorithm>
 # include <functional>
 # include <unordered_map>
-# include <unordered_set>
 # include <queue>
 
 # include "Node.hpp"
 # include "setupHeurisitics.hpp"
+
+struct PDB;
 
 enum class HeuristicType
 {
@@ -29,8 +30,13 @@ enum class HeuristicType
 	PDB
 };
 
-using Heuristic = std::function<int(const Node&, const Node&)>;
-using PDBTable = std::unordered_map<Node, int>;
+using PDBTable = std::unordered_map<Node, int, NodeHash>;
+
+using Heuristic = std::function<int(
+	const Node 								*a,
+	const Node 								*b,
+	PDB										*pdb
+)>;
 
 class AlgoStar
 {
@@ -39,13 +45,13 @@ class AlgoStar
 		AlgoStar(const Node &start, const Node &goal);
 		// methods //
 		bool 	start(HeuristicType h);
-		Node	project(Node curr, std::unordered_set<int> &pattern);
-		private:
+	private:
 		// props //
 		int														_expandedNodes;
 		int														_maxStates;
 		Node 													_start;
 		Node 													_goal;
+		HeuristicType											_heuristicT;
 		Heuristic												_heuristic;
 		std::priority_queue<Node, std::vector<Node>, NodeCmp>	_opened;
 		std::unordered_set<Node, NodeHash>						_closed;
@@ -55,6 +61,7 @@ class AlgoStar
 		std::vector<std::unordered_set<int>>					_patterns;
 		std::vector<PDBTable>									_pdbs;
 		// methods //
+		int			calcHeuristic(const Node &n);
 		void		setHeuristic(HeuristicType h);
 		void 		showResult();
 		void		buildPatterns();

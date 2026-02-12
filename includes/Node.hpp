@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:02:04 by glions            #+#    #+#             */
-/*   Updated: 2026/02/11 16:08:18 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/12 14:29:53 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <queue>
 # include <iostream>
+# include <unordered_set>
 
 struct Pos
 {
@@ -43,6 +44,7 @@ class Node
 		bool operator!=(const Node &o) const;
 		// methods //
 		std::vector<Node>	genNeighbors();
+		Node				project(std::unordered_set<int> &patterns) const;
 	private:
 		// props //
 		int								_g;

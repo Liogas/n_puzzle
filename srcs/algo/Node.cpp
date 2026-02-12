@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:53:02 by glions            #+#    #+#             */
-/*   Updated: 2026/02/11 16:10:00 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/12 14:34:46 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,12 @@ Node::Node():
 
 }
 
-
 Node::Node(const std::vector<std::vector<int>> &grid, int g, int h):
 	_g(g),
 	_h(h),
 	_f(g + h),
 	_grid(grid)
 {
-	std::cout << "Node default constructor called" << std::endl;
-	std::cout << this->_g << ";" << this->_h << ";" << this->_f << std::endl;
 }
 
 std::vector<Node>	Node::genNeighbors()
@@ -47,6 +44,20 @@ std::vector<Node>	Node::genNeighbors()
 	if (emptySlot.x < (int)this->_grid[emptySlot.y].size() - 1) 
 		genNeighbor(neighbors, 0, 1);
 	return (neighbors);
+}
+
+Node	Node::project(std::unordered_set<int> &pattern) const
+{
+	Node n = *this;
+	for (size_t i = 0; i < n.getGrid().size(); i++)
+	{
+		for (size_t j = 0; j < n.getGrid().size(); j++)
+		{
+			if (!pattern.count(n.getGrid()[i][j]) && n.getGrid()[i][j] != 0)
+				n.setValueGrid(i, j, -1);
+		}
+	}
+	return (n);
 }
 
 bool	Node::operator==(const Node &o) const
@@ -96,7 +107,7 @@ void	Node::setH(const int &h)
 
 void	Node::setValueGrid(int y, int x, int val)
 {
-	if (y < 0 || y >= this->_grid.size() || x < 0 || x >= this->_grid.size())
+	if (y < 0 || y >= (int)this->_grid.size() || x < 0 || x >= (int)this->_grid.size())
 		std::cerr << "X or Y invalid" << std::endl;
 	else
 		this->_grid[y][x] = val;
