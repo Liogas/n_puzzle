@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:48:23 by glions            #+#    #+#             */
-/*   Updated: 2026/02/12 14:32:00 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/13 15:14:01 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,24 @@
 
 # include "AlgoStar.hpp"
 # include "heuristics.hpp"
+# include "PatternDatabase.hpp"
 
-using PDBTable = std::unordered_map<Node, int, NodeHash>;
-
-struct PDB
-{
-	std::vector<std::unordered_set<int>>	patterns;
-	std::vector<PDBTable>					pdbs;
-};
+using PDBTable = std::unordered_map<PatternState, int, PatternHash>;
 
 int	distManhattan(
 	const Node 								*a,
 	const Node 								*b,
-	PDB										*pdb
+	const PatternDatabase					*pdb
 );
 int	distLinearConflict(
 	const Node 								*a,
 	const Node 								*b,
-	PDB										*pdb
+	const PatternDatabase					*pdb
 );
 int	distPDB(
 	const Node 								*a,
 	const Node 								*b,
-	PDB										*pdb
+	const PatternDatabase					*pdb
 );
-
-
 
 #endif

@@ -11,7 +11,9 @@ SRCS		= $(SRCS_DIR)/main.cpp \
               $(SRCS_DIR)/algo/heuristics.cpp \
               $(SRCS_DIR)/algo/setupHeuristics.cpp \
               $(SRCS_DIR)/algo/Node.cpp \
-              $(SRCS_DIR)/parsing/parsing.cpp
+              $(SRCS_DIR)/algo/PatternDatabase.cpp \
+              $(SRCS_DIR)/algo/PatternState.cpp \
+              $(SRCS_DIR)/parsing/parsing.cpp \
 
 OBJS 		= $(SRCS:$(SRCS_DIR)/%.cpp=$(OBJS_DIR)/%.o)
 

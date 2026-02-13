@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 15:52:25 by glions            #+#    #+#             */
-/*   Updated: 2026/02/12 14:34:13 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/13 15:22:06 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	distManhattan(
 	const Node 								*a,
 	const Node 								*b,
-	PDB										*pdb
+	const PatternDatabase					*pdb
 )
 {
 	(void)pdb;
@@ -43,16 +43,22 @@ int	distManhattan(
 int	distPDB(
 	const Node 								*a,
 	const Node 								*b,
-	PDB										*pdb
+	const PatternDatabase					*pdb
 )
 {
 	(void)b;
 	int	h = 0;
 
-	for (size_t i = 0; i < pdb->patterns.size(); i++)
+	for (size_t i = 0; i < pdb->getPatterns().size(); i++)
 	{
-		Node key = a->project(pdb->patterns[i]);
-		h += pdb->pdbs[i][key];
+		const PDBTable table = pdb->getPDBs()[i];
+		PatternState key(a->getGrid().size());
+		key.makePatternState(*a, pdb->getPatterns()[i]);
+		auto it = table.find(key);
+		if (it != table.end())
+			h += it->second;
+		else
+			h += 0;
 	}
 	return (h);
 }
@@ -89,7 +95,7 @@ static int	countLinearConflict(const std::vector<int> &lineA,
 int	distLinearConflict(
 	const Node 								*a,
 	const Node 								*b,
-	PDB										*pdb
+	const PatternDatabase					*pdb
 )
 {
 	int	dist = distManhattan(a, b, pdb);
