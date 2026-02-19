@@ -6,12 +6,15 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 11:13:26 by glions            #+#    #+#             */
-/*   Updated: 2026/02/13 15:08:40 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/19 12:27:07 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "AlgoStar.hpp"
 
+
+
+	
 AlgoStar::AlgoStar(const Node &start, const Node &goal):
 	_expandedNodes(0),
 	_maxStates(0),

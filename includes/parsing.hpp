@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 12:11:52 by glions            #+#    #+#             */
-/*   Updated: 2026/02/02 12:14:40 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/19 14:53:27 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 struct ParsingInfo
 {
-	std::vector<std::vector<int>> 	grid;
+	std::vector<int> 				grid;
 	bool							solvable;
 	int								size;
 };

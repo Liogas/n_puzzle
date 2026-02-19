@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 12:12:47 by glions            #+#    #+#             */
-/*   Updated: 2026/02/02 12:22:14 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/19 16:10:58 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,24 +48,19 @@ static bool parseGrid(std::ifstream &f, ParsingInfo &i)
 	while (std::getline(f, line))
 	{
 		std::istringstream ss(line);
-		std::vector<int> row;
 		int	n;
 		while (ss >> n)
-			row.push_back(n);
-		i.grid.push_back(row);
+			i.grid.push_back(n);
 	}
 	f.close();
-	if ((int)i.grid.size() != i.size)
+	if ((int)i.grid.size() != i.size * i.size)
 		return (false);
 	std::vector<int> mem;
-	for (auto &row : i.grid) {
-        for (auto val : row)
-		{
-			auto it = std::find(mem.begin(), mem.end(), val);
-			if (it != mem.end())
-				return (false);
-			mem.push_back(val);
-		}
+	for (auto &val : i.grid) {
+		auto it = std::find(mem.begin(), mem.end(), val);
+		if (it != mem.end())
+			return (false);
+		mem.push_back(val);
     }
 	auto it = std::find(mem.begin(), mem.end(), 0);
 	if (it == mem.end())

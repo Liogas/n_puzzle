@@ -6,93 +6,108 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/02/12 14:37:48 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/19 16:16:17 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "AlgoStar.hpp"
+#include <iostream>
 #include "parsing.hpp"
-#include "heuristics.hpp"
+#include "nPuzzle.hpp"
+#include "AStar.hpp"
+#include <iomanip>
 
-bool parity(std::vector<std::vector<int>> grid)
+bool parity(const std::vector<int> &grid1D, int n)
 {
-	std::vector<int> 	list;
-	int				 	row = 0;
-	for (size_t i = 0; i < grid.size(); i++)
-	{
-		for (size_t j = 0; j < grid[i].size(); j++)
-		{
-			if (grid[i][j] != 0)
-				list.push_back(grid[i][j]);
-		}
-	}
-	int	nbInvers = 0;
-	for (size_t i = 0; i < list.size(); i++)
-	{
-		for (size_t j = i + 1; j < list.size(); j++)
-		{
-			if (list[i] > list[j])
-				nbInvers++;
-		}
-	}
-	if (grid.size() % 2 == 0)
-	{
-		for (int i = grid.size() - 1; i >= 0; i--)
-		{
-			row++;
-			for (size_t j = 0; j < grid[i].size(); j++)
-			{
-				if (grid[i][j] == 0)
-				{
-					i = -1;
-					break ;
-				}
-			}
-		}
-	}
-	if (grid.size() % 2 != 0)
-		return (nbInvers % 2);
-	return ((nbInvers + row) % 2);
+    std::vector<int> list;
+    int row = 0;
+
+    for (int val : grid1D)
+        if (val != 0)
+            list.push_back(val);
+
+    int nbInvers = 0;
+    for (size_t i = 0; i < list.size(); i++)
+        for (size_t j = i + 1; j < list.size(); j++)
+            if (list[i] > list[j])
+                nbInvers++;
+
+    if (n % 2 == 0)
+    {
+        auto it = std::find(grid1D.begin(), grid1D.end(), 0);
+        int zeroPos = std::distance(grid1D.begin(), it);
+        row = n - (zeroPos / n);
+    }
+
+    if (n % 2 != 0)
+        return nbInvers % 2 == 0 ? false : true;
+    return (nbInvers + row) % 2 == 0 ? false : true;
 }
 
-std::vector<std::vector<int>> genFinalGrid(std::vector<std::vector<int>> &grid)
+std::vector<int> genFinalGrid(const std::vector<int> &grid)
 {
-	int	n = grid.size();
-	std::vector<int> values;
-	std::vector<std::vector<int>> g(n, std::vector<int>(n, -1));
+    int n = grid.size();
+    std::vector<int> values;
+    std::vector<int> g(n * n, -1);
 
-	for (const auto &row : grid)
-		for (int val : row)
-		{
-			if (val != 0)
-				values.push_back(val);
-		}
-	std::sort(values.begin(), values.end());
-	values.push_back(0);
-	int	dir[4] = {0, n - 1, 0, n - 1};
-	int	idx = 0;
-	while (dir[0] <= dir[1] && dir[2] <= dir[3])
-	{
-		for (int x = dir[2]; x <= dir[3]; x++)
-			g[dir[0]][x] = values[idx++];
-		dir[0]++;
-		for (int y = dir[0]; y <= dir[1]; y++)
-			g[y][dir[3]] = values[idx++];
-		dir[3]--;
-		for (int x = dir[3]; x >= dir[2]; x--)
-			g[dir[1]][x] = values[idx++];
-		dir[1]--;
-		for (int y = dir[1]; y >= dir[0]; y--)
-			g[y][dir[2]] = values[idx++];
-		dir[2]++;
-	}
-	return (g);
+    // Récupérer toutes les valeurs sauf 0
+    for (const auto &val : grid)
+            if (val != 0)
+                values.push_back(val);
+
+    std::sort(values.begin(), values.end());
+    values.push_back(0);
+
+    int dir[4] = {0, n - 1, 0, n - 1};
+    int idx = 0;
+
+    while (dir[0] <= dir[1] && dir[2] <= dir[3])
+    {
+        // ligne du haut
+        for (int x = dir[2]; x <= dir[3]; x++)
+            g[dir[0] * n + x] = values[idx++];
+        dir[0]++;
+
+        // colonne de droite
+        for (int y = dir[0]; y <= dir[1]; y++)
+            g[y * n + dir[3]] = values[idx++];
+        dir[3]--;
+
+        // ligne du bas
+        for (int x = dir[3]; x >= dir[2]; x--)
+            g[dir[1] * n + x] = values[idx++];
+        dir[1]--;
+
+        // colonne de gauche
+        for (int y = dir[1]; y >= dir[0]; y--)
+            g[y * n + dir[2]] = values[idx++];
+        dir[2]++;
+    }
+
+    return g;
+}
+
+void printState(const NPuzzleState& s)
+{
+    for (int row = 0; row < s.size; ++row)
+    {
+        for (int col = 0; col < s.size; ++col)
+        {
+            int value = s.board[row * s.size + col];
+
+            if (value == 0)
+                std::cout << "   ";   // case vide
+            else
+                std::cout << std::setw(3) << value;
+
+        }
+        std::cout << '\n';
+    }
+    std::cout << '\n';
 }
 
 int	main(int ac, char **av)
 {
 	ParsingInfo	parsingInfo;
-	HeuristicType hType;
 	if (ac != 3)
 	{
 		std::cout << "args missing : ./nPuzzle [file] [heuristic]" << std::endl;
@@ -103,38 +118,27 @@ int	main(int ac, char **av)
 		std::cerr << "File not conform : " << av[1] << std::endl;
 		return (1);
 	}
-	std::string heuristic(av[2]);
-	if (heuristic == "manhattan")
-		hType = HeuristicType::Manhattan;
-	else if (heuristic == "linearconflict")
-		hType = HeuristicType::LinearConflict;
-	else if (heuristic == "pdb")
-		hType = HeuristicType::PDB;
-	else
-	{
-		std::cerr << "Heuristic unknown ! try -> manhattan | linearConflict" << std::endl;
-		return (1);
-	}
-	std::vector<std::vector<int>> finalGrid = genFinalGrid(parsingInfo.grid);
-	Node start(parsingInfo.grid, 0, 0);
-	Node dest(finalGrid, -1, -1);
-	for (auto &row : start.getGrid()) {
-        for (auto val : row)
-			std::cout << " " << val;
-		std::cout << std::endl;
-    }
-	std::cout << std::endl << std::endl;
-	for (auto &row : dest.getGrid()) {
-        for (auto val : row)
-			std::cout << " " << val;
-		std::cout << std::endl;
-    }
-	if (parity(start.getGrid()) != parity(dest.getGrid()))
+	std::vector<int> finalGrid = genFinalGrid(parsingInfo.grid);
+	NPuzzleState start{parsingInfo.grid, parsingInfo.size};
+	NPuzzleState dest{finalGrid, parsingInfo.size};
+	if (parity(start.board, start.size) != parity(dest.board, start.size))
 	{
 		std::cout << "Grid unsolvable" << std::endl;
 		return (0);
 	}
-	AlgoStar algo(start, dest);
-	algo.start(hType);
+
+	printState(start);
+	printState(dest);
+
+	std::vector<NPuzzleState> path = AStar(
+		start,
+		dest,
+		[](const NPuzzleState &s){ return s.genNeighbors(); },
+		[](const NPuzzleState &s, const NPuzzleState &g){ (void)s; (void)g; return (1); },
+		manhattan
+	);
+	std::cout << std::endl;
+	for (auto s : path)
+		printState(s);
 	return (0);
 }
