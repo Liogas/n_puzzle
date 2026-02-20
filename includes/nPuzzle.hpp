@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 14:54:44 by glions            #+#    #+#             */
-/*   Updated: 2026/02/19 16:06:22 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/20 13:00:13 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 
 # include <algorithm>
 # include <vector>
+# include <unordered_map>
+# include <iostream>
+# include <iomanip>
+# include <cmath>
 
 struct	NPuzzleState
 {
@@ -34,6 +38,7 @@ struct	NPuzzleState
 
         auto swapAndAdd = [&](int i, int j) {
             NPuzzleState next = *this;
+            next.size = this->size;
             std::swap(next.board[i], next.board[j]);
             result.push_back(next);
         };
@@ -65,6 +70,10 @@ namespace	std
     };
 }
 
-int	manhattan(const NPuzzleState &s, const NPuzzleState &goal);
+int					manhattan(const NPuzzleState &s, const NPuzzleState &goal);
+int					linearConflict(const NPuzzleState &s, const NPuzzleState &goal);
+bool				parity(const std::vector<int> &grid1D, int n);
+std::vector<int>	genFinalGrid(const std::vector<int> &grid);
+void 				printNPuzzleState(const NPuzzleState& s);
 
 #endif

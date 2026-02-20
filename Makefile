@@ -22,14 +22,39 @@ $(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
 	@echo "👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌"
 
-run: $(NAME)
-	./$(NAME)
+gen3puzzle:
+	./npuzzle-gen.py -s 3 > puzzle3.txt
+
+gen4puzzle:
+	./npuzzle-gen.py -s 4 > puzzle4.txt
+
+gen5puzzle:
+	./npuzzle-gen.py -s 5 > puzzle5.txt
+
+run3manhattan: $(NAME)
+	./$(NAME) puzzle3.txt manhattan
+
+run3linearConflict: $(NAME)
+	./$(NAME) puzzle3.txt linearConflict
+
+run4manhattan: $(NAME)
+	./$(NAME) puzzle4.txt manhattan
+
+run4linearConflict: $(NAME)
+	./$(NAME) puzzle4.txt linearConflict
+
+run5manhattan: $(NAME)
+	./$(NAME) puzzle5.txt manhattan
+
+run5linearConflict: $(NAME)
+	./$(NAME) puzzle5.txt linearConflict
+
 
 clean:
 	rm -rf $(OBJS_DIR)
 
 fclean: clean
-	rm -rf $(NAME) puzzle.txt
+	rm -rf $(NAME) *.out *.txt
 
 re : fclean $(NAME)
 

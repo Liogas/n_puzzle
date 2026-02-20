@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:08:55 by glions            #+#    #+#             */
-/*   Updated: 2026/02/20 11:50:01 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/20 12:48:45 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,18 @@ std::vector<State> reconstructPath(std::shared_ptr<Node<State>> node)
     return path;
 }
 
-// template<AStarState State>
+template<AStarState State>
 void	showAStarData(
-	int &e,
-	int &m
+	int 							&e,
+	int 							&m,
+	std::unordered_map<State, int>	d,
+	const State						&g
 )
 {
 	std::cout << "Result: "<< std::endl;
 	std::cout << "Time complexity: " << e << std::endl;
 	std::cout << "Size complexity: " << m << std::endl;
-	// std::cout << "Number of moves: " << d[g] << std::endl;
+	std::cout << "Number of moves: " << d[g] << std::endl;
 }
 
 template<
@@ -75,7 +77,7 @@ std::vector<State> AStar(
 			maxState = openList.size() + closeList.size();
 		if (curr->state == goal)
 		{
-			showAStarData(expandedNodes, maxState);
+			showAStarData(expandedNodes, maxState, distances, goal);
 			return {reconstructPath(curr)};
 		}
 		closeList.insert(curr->state);
@@ -90,6 +92,7 @@ std::vector<State> AStar(
 					n, g, calHeur(n, goal), curr
 				});
 				openList.push(nNode);
+				distances[nNode->state] = g;
 			}
 		}
 	}
