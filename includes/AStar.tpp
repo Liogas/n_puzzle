@@ -6,13 +6,13 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:08:55 by glions            #+#    #+#             */
-/*   Updated: 2026/02/19 16:17:03 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/20 11:50:01 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AStar.hpp"
 
-template<typename State>
+template<AStarState State>
 std::vector<State> reconstructPath(std::shared_ptr<Node<State>> node)
 {
 	std::cout << "Je veux reconstruire le path" << std::endl;
@@ -24,6 +24,18 @@ std::vector<State> reconstructPath(std::shared_ptr<Node<State>> node)
     }
     std::reverse(path.begin(), path.end());
     return path;
+}
+
+// template<AStarState State>
+void	showAStarData(
+	int &e,
+	int &m
+)
+{
+	std::cout << "Result: "<< std::endl;
+	std::cout << "Time complexity: " << e << std::endl;
+	std::cout << "Size complexity: " << m << std::endl;
+	// std::cout << "Number of moves: " << d[g] << std::endl;
 }
 
 template<
@@ -45,8 +57,10 @@ std::vector<State> AStar(
 		std::shared_ptr<Node<State>>,
 		std::vector<std::shared_ptr<Node<State>>>,
 		CmpNode<State>
-	> 							openList;
-	std::unordered_set<State>	closeList;
+	> 								openList;
+	std::unordered_set<State>		closeList;
+	std::unordered_map<State, int>	distances;
+	int								maxState = 0, expandedNodes = 0;
 
 	auto startNode = std::make_shared<Node<State>>(Node<State>{
 		start, 0, calHeur(start, goal), nullptr
@@ -56,19 +70,27 @@ std::vector<State> AStar(
 	{
 		auto curr = openList.top();
 		openList.pop();
+		expandedNodes++;
+		if (openList.size() + closeList.size() > (unsigned long)maxState)
+			maxState = openList.size() + closeList.size();
 		if (curr->state == goal)
+		{
+			showAStarData(expandedNodes, maxState);
 			return {reconstructPath(curr)};
+		}
 		closeList.insert(curr->state);
 		for (State n : genNeighbors(curr->state))
 		{
 			if (closeList.count(n))
 				continue ;
-
 			int g = curr->g + calDist(curr->state, n);
-			auto nNode = std::make_shared<Node<State>>(Node<State>{
-				n, g, calHeur(n, goal), curr
-			});
-			openList.push(nNode);
+			if (!distances.count(n) || g < distances[n])
+			{
+				auto nNode = std::make_shared<Node<State>>(Node<State>{
+					n, g, calHeur(n, goal), curr
+				});
+				openList.push(nNode);
+			}
 		}
 	}
 	return {};

@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/02/19 16:16:17 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/20 11:48:57 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "parsing.hpp"
 #include "nPuzzle.hpp"
 #include "AStar.hpp"
+#include <cmath>
 #include <iomanip>
 
 bool parity(const std::vector<int> &grid1D, int n)
@@ -45,7 +46,7 @@ bool parity(const std::vector<int> &grid1D, int n)
 
 std::vector<int> genFinalGrid(const std::vector<int> &grid)
 {
-    int n = grid.size();
+    int n = std::sqrt(grid.size());
     std::vector<int> values;
     std::vector<int> g(n * n, -1);
 
