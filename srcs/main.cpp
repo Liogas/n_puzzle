@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/02/20 13:10:16 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/23 13:48:37 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,25 +47,32 @@ int	main(int ac, char **av)
 
 	printNPuzzleState(start);
 	printNPuzzleState(dest);
-    std::string h(av[2]);
-    if (h == "manhattan")
-        heur = manhattan;
-    else if (h == "linearConflict")
-        heur = linearConflict;
-    else
-    {
-        std::cerr << "Unknown heuristic" << std::endl;
-        return (1);
-    }
-	std::vector<NPuzzleState> path = AStar(
-		start,
-		dest,
-		[](const NPuzzleState &s){ return s.genNeighbors(); },
-		[](const NPuzzleState &s, const NPuzzleState &g){ (void)s; (void)g; return (1); },
-		heur
-	);
-	std::cout << std::endl;
-	for (auto s : path)
-		printNPuzzleState(s);
+
+	std::vector<int> pattern = {1, 2, 3, 4};
+
+	PatternDatabase<NPuzzleState> pdb(pattern, dest);
+	pdb.build();
+	
+
+    // std::string h(av[2]);
+    // if (h == "manhattan")
+    //     heur = manhattan;
+    // else if (h == "linearConflict")
+    //     heur = linearConflict;
+    // else
+    // {
+    //     std::cerr << "Unknown heuristic" << std::endl;
+    //     return (1);
+    // }
+	// std::vector<NPuzzleState> path = AStar(
+	// 	start,
+	// 	dest,
+	// 	[](const NPuzzleState &s){ return s.genNeighbors(); },
+	// 	[](const NPuzzleState &s, const NPuzzleState &g){ (void)s; (void)g; return (1); },
+	// 	heur
+	// );
+	// std::cout << std::endl;
+	// for (auto s : path)
+	// 	printNPuzzleState(s);
 	return (0);
 }

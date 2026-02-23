@@ -6,29 +6,22 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 10:53:17 by glions            #+#    #+#             */
-/*   Updated: 2026/02/20 12:45:55 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/23 12:10:37 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ALGOSTAR_HPP
-# define ALGOSTAR_HPP
+#ifndef ASTAR_HPP
+# define ASTAR_HPP
 
-#include <vector>
-#include <queue>
-#include <unordered_set>
-#include <unordered_map>
-#include <algorithm>
-#include <iostream>
-#include <memory>
+# include <vector>
+# include <queue>
+# include <unordered_set>
+# include <unordered_map>
+# include <algorithm>
+# include <iostream>
+# include <memory>
 
-template<typename State>
-struct Node
-{
-	State							state;
-	int								g;
-	int								h;
-	std::shared_ptr<Node<State>>	parent;
-};
+# include "PatternDatabase.hpp"
 
 template<typename State>
 concept AStarState =
@@ -38,6 +31,16 @@ concept AStarState =
 	{
 		{ std::hash<State>{}(s)} -> std::convertible_to<std::size_t>;
 	};
+
+
+template<AStarState State>
+struct Node
+{
+	State							state;
+	int								g;
+	int								h;
+	std::shared_ptr<Node<State>>	parent;
+};
 
 template<
 	AStarState State,
@@ -62,7 +65,7 @@ struct CmpNode
 	{
 		return (a->g + a->h) > (b->g + b->h);
 	}
-};	
+};
 
 # include "AStar.tpp"
 

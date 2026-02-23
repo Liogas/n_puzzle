@@ -6,11 +6,9 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:08:55 by glions            #+#    #+#             */
-/*   Updated: 2026/02/20 12:48:45 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/23 12:30:52 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "AStar.hpp"
 
 template<AStarState State>
 std::vector<State> reconstructPath(std::shared_ptr<Node<State>> node)

@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:49:24 by glions            #+#    #+#             */
-/*   Updated: 2026/02/20 13:57:25 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/23 15:01:18 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,56 @@
 # define PATTERNDATABASE_HPP
 
 # include <vector>
+# include <functional>
+# include <concepts>
+# include <cstddef>
+# include <unordered_map>
+# include <unordered_set>
 
+# include "nPuzzle.hpp"
+
+template<typename T>
+concept Hashable =
+	requires(T a){
+		{ std::hash<T>{}(a) } -> std::convertible_to<size_t>;
+	};
+
+template<typename T>
+concept PatternState =
+	requires(T a) {
+		typename T::TileType;
+		{a == a} -> std::convertible_to<bool>;
+	} && Hashable<T>;
+
+template<
+	PatternState T,
+	typename	AbstractFn,
+	typename	NeighborsFn
+>
 class PatternDatabase
 {
 	public:
-		
+		using TileType = typename T::TileType;
+		PatternDatabase(
+			const std::vector<TileType>&,
+			const T &
+			AbstractFn,
+			NeighborsFn
+		);
+		// methods
+		void	build();
+		int		getDistance(const T &) const;
 	private:
-		std::vector<int>	_pattern;
+		// props
+		std::unordered_set<TileType>	_pattern;
+		T								_goal;
+		std::unordered_map<T, int>		_distances;
+		AbstractFn						_abstractFn;
+		NeighborsFn						_neighborsFn;
+		// methods
+		T	abstractState(const T &) const;
 };
+
+#include "PatternDatabase.tpp"
 
 #endif

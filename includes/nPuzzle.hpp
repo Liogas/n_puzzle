@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 14:54:44 by glions            #+#    #+#             */
-/*   Updated: 2026/02/20 13:00:13 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/23 13:38:27 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 struct	NPuzzleState
 {
+    using TileType = int;
     std::vector<int>	board;
     int					size;
     
