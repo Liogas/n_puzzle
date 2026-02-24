@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 14:54:44 by glions            #+#    #+#             */
-/*   Updated: 2026/02/23 13:38:27 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/24 15:11:09 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ struct	NPuzzleState
     using TileType = int;
     std::vector<int>	board;
     int					size;
+    int                 zeroPos;
     
     bool operator==(const NPuzzleState &other) const
     {
@@ -34,13 +35,12 @@ struct	NPuzzleState
     std::vector<NPuzzleState> genNeighbors() const
     {
         std::vector<NPuzzleState> result;
-        int zeroPos = 0;
-        while (board[zeroPos] != 0) zeroPos++;
 
         auto swapAndAdd = [&](int i, int j) {
             NPuzzleState next = *this;
             next.size = this->size;
             std::swap(next.board[i], next.board[j]);
+            next.zeroPos = j;
             result.push_back(next);
         };
 
@@ -76,5 +76,6 @@ int					linearConflict(const NPuzzleState &s, const NPuzzleState &goal);
 bool				parity(const std::vector<int> &grid1D, int n);
 std::vector<int>	genFinalGrid(const std::vector<int> &grid);
 void 				printNPuzzleState(const NPuzzleState& s);
+
 
 #endif

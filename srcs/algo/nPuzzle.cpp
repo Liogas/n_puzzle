@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 14:29:50 by glions            #+#    #+#             */
-/*   Updated: 2026/02/20 13:00:24 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/24 10:56:21 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,3 +170,4 @@ void printNPuzzleState(const NPuzzleState& s)
     }
     std::cout << '\n';
 }
+

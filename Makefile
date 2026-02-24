@@ -37,6 +37,9 @@ run3manhattan: $(NAME)
 run3linearConflict: $(NAME)
 	./$(NAME) puzzle3.txt linearConflict
 
+run3pdb: $(NAME)
+	./$(NAME) puzzle3.txt pdb
+
 run4manhattan: $(NAME)
 	./$(NAME) puzzle4.txt manhattan
 

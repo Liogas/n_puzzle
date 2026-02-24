@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:49:24 by glions            #+#    #+#             */
-/*   Updated: 2026/02/23 15:01:18 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/24 15:31:33 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class PatternDatabase
 		using TileType = typename T::TileType;
 		PatternDatabase(
 			const std::vector<TileType>&,
-			const T &
+			const T &,
 			AbstractFn,
 			NeighborsFn
 		);
