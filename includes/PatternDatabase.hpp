@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 13:49:24 by glions            #+#    #+#             */
-/*   Updated: 2026/02/24 15:31:33 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/25 13:25:32 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class PatternDatabase
 		using TileType = typename T::TileType;
 		PatternDatabase(
 			const std::vector<TileType>&,
-			const T &,
+			T,
 			AbstractFn,
 			NeighborsFn
 		);
@@ -60,8 +60,6 @@ class PatternDatabase
 		std::unordered_map<T, int>		_distances;
 		AbstractFn						_abstractFn;
 		NeighborsFn						_neighborsFn;
-		// methods
-		T	abstractState(const T &) const;
 };
 
 #include "PatternDatabase.tpp"

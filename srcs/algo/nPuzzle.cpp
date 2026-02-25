@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 14:29:50 by glions            #+#    #+#             */
-/*   Updated: 2026/02/24 10:56:21 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/25 13:18:21 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,9 +154,9 @@ std::vector<int> genFinalGrid(const std::vector<int> &grid)
 
 void printNPuzzleState(const NPuzzleState& s)
 {
-    for (int row = 0; row < s.size; ++row)
+    for (int row = 0; row < s.size; row++)
     {
-        for (int col = 0; col < s.size; ++col)
+        for (int col = 0; col < s.size; col++)
         {
             int value = s.board[row * s.size + col];
 

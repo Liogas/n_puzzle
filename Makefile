@@ -46,11 +46,17 @@ run4manhattan: $(NAME)
 run4linearConflict: $(NAME)
 	./$(NAME) puzzle4.txt linearConflict
 
+run4pdb: $(NAME)
+	./$(NAME) puzzle4.txt pdb
+
 run5manhattan: $(NAME)
 	./$(NAME) puzzle5.txt manhattan
 
 run5linearConflict: $(NAME)
 	./$(NAME) puzzle5.txt linearConflict
+
+run5pdb: $(NAME)
+	./$(NAME) puzzle5.txt pdb
 
 
 clean:
