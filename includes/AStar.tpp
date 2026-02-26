@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:08:55 by glions            #+#    #+#             */
-/*   Updated: 2026/02/23 12:30:52 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/26 15:59:27 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ std::vector<State> AStar(
 	auto startNode = std::make_shared<Node<State>>(Node<State>{
 		start, 0, calHeur(start, goal), nullptr
 	});
+	distances[startNode->state] = 0;
 	openList.push(startNode);
 	while (!openList.empty())
 	{

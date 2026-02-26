@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/02/25 15:11:02 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/26 16:00:45 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,63 @@
 using Heuristic = std::function<
     int(const NPuzzleState &, const NPuzzleState &)
 >;
+
+void startAStar(
+	const NPuzzleState	&start,
+	const NPuzzleState	&dest,
+	Heuristic			heur
+)
+{
+	std::cout << "Start A*" << std::endl;
+	std::vector<NPuzzleState> path = AStar(
+		start,
+		dest,
+		[](const NPuzzleState &s){ return s.genNeighbors(); },
+		[](const NPuzzleState &s, const NPuzzleState &g){ (void)s; (void)g; return (1); },
+		heur
+	);
+	std::cout << std::endl;
+	for (auto s : path)
+		printNPuzzleState(s);
+}
+
+void startUniform(
+	const NPuzzleState	&start,
+	const NPuzzleState	&dest
+){
+	std::cout << "Start uniform-cost" << std::endl;
+	std::vector<NPuzzleState> path = AStar(
+		start,
+		dest,
+		[](const NPuzzleState &s){ return s.genNeighbors(); },
+		[](const NPuzzleState &s, const NPuzzleState &g){ (void)s; (void)g; return (1); },
+		[](const NPuzzleState &s, const NPuzzleState &g) { (void)s; (void)g; return (0); }
+	);
+	std::cout << "Size du path : " << path.size() << std::endl;
+	std::cout << std::endl;
+	for (auto s : path)
+		printNPuzzleState(s);
+}
+
+void startGreedy(
+	const NPuzzleState	&start,
+	const NPuzzleState	&dest,
+	Heuristic			heur
+)
+{
+	std::cout << "Start greedy search" << std::endl;
+	std::vector<NPuzzleState> path = AStar(
+		start,
+		dest,
+		[](const NPuzzleState &s){ return s.genNeighbors(); },
+		[](const NPuzzleState &s, const NPuzzleState &g){ (void)s; (void)g; return (0); },
+		heur
+	);
+	std::cout << "Size du path : " << path.size() << std::endl;
+	std::cout << std::endl;
+	for (auto s : path)
+		printNPuzzleState(s);
+}
 
 int	main(int ac, char **av)
 {
@@ -89,15 +146,10 @@ int	main(int ac, char **av)
         std::cerr << "Unknown heuristic" << std::endl;
         return (1);
     }
-	std::vector<NPuzzleState> path = AStar(
-		start,
-		dest,
-		[](const NPuzzleState &s){ return s.genNeighbors(); },
-		[](const NPuzzleState &s, const NPuzzleState &g){ (void)s; (void)g; return (1); },
-		heur
-	);
-	std::cout << std::endl;
-	for (auto s : path)
-		printNPuzzleState(s);
+
+	startAStar(start, dest, heur);
+	startGreedy(start, dest, heur);
+	startUniform(start, dest);
+	
 	return (0);
 }
