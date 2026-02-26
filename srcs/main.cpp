@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/02/26 16:00:45 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/26 16:16:42 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void startUniform(
 		[](const NPuzzleState &s, const NPuzzleState &g){ (void)s; (void)g; return (1); },
 		[](const NPuzzleState &s, const NPuzzleState &g) { (void)s; (void)g; return (0); }
 	);
-	std::cout << "Size du path : " << path.size() << std::endl;
+	std::cout << "Size du path : " << path.size() - 1 << std::endl;
 	std::cout << std::endl;
 	for (auto s : path)
 		printNPuzzleState(s);
@@ -71,7 +71,6 @@ void startGreedy(
 		[](const NPuzzleState &s, const NPuzzleState &g){ (void)s; (void)g; return (0); },
 		heur
 	);
-	std::cout << "Size du path : " << path.size() << std::endl;
 	std::cout << std::endl;
 	for (auto s : path)
 		printNPuzzleState(s);
