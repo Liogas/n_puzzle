@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 14:54:44 by glions            #+#    #+#             */
-/*   Updated: 2026/02/25 14:41:40 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/27 12:44:34 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ struct	NPuzzleState
         int row = zeroPos / size;
         int col = zeroPos % size;
 
-        if (row > 0) swapAndAdd(zeroPos, zeroPos - size);       // up
-        if (row < size - 1) swapAndAdd(zeroPos, zeroPos + size); // down
-        if (col > 0) swapAndAdd(zeroPos, zeroPos - 1);         // left
-        if (col < size - 1) swapAndAdd(zeroPos, zeroPos + 1);  // right
+        if (row > 0) swapAndAdd(zeroPos, zeroPos - size);			// up
+        if (row < size - 1) swapAndAdd(zeroPos, zeroPos + size); 	// down
+        if (col > 0) swapAndAdd(zeroPos, zeroPos - 1);         		// left
+        if (col < size - 1) swapAndAdd(zeroPos, zeroPos + 1);  		// right
 
         return (result);
     }

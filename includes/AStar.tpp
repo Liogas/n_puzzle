@@ -6,14 +6,13 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 11:08:55 by glions            #+#    #+#             */
-/*   Updated: 2026/02/26 15:59:27 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/27 12:54:15 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 template<AStarState State>
 std::vector<State> reconstructPath(std::shared_ptr<Node<State>> node)
 {
-	std::cout << "Je veux reconstruire le path" << std::endl;
     std::vector<State> path;
     while (node != nullptr)
     {

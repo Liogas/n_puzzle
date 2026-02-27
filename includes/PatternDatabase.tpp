@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:04:54 by glions            #+#    #+#             */
-/*   Updated: 2026/02/25 14:56:50 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/27 12:45:13 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,6 @@ void PatternDatabase<T, AbstractFn, NeighborsFn>::build()
 			}
 		}	
 	}
-	std::cout << "Size pdb : " << this->_distances.size() << std::endl;
-	std::cout << _distances.bucket_count() << std::endl;
-	std::cout << _distances.load_factor() << std::endl;
-	std::cout << _distances.max_load_factor() << std::endl;
 }
 
 template<

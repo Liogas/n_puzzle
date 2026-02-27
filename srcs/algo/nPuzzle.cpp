@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 14:29:50 by glions            #+#    #+#             */
-/*   Updated: 2026/02/25 13:18:21 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/27 12:44:10 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,22 +128,18 @@ std::vector<int> genFinalGrid(const std::vector<int> &grid)
 
     while (dir[0] <= dir[1] && dir[2] <= dir[3])
     {
-        // ligne du haut
         for (int x = dir[2]; x <= dir[3]; x++)
             g[dir[0] * n + x] = values[idx++];
         dir[0]++;
 
-        // colonne de droite
         for (int y = dir[0]; y <= dir[1]; y++)
             g[y * n + dir[3]] = values[idx++];
         dir[3]--;
 
-        // ligne du bas
         for (int x = dir[3]; x >= dir[2]; x--)
             g[dir[1] * n + x] = values[idx++];
         dir[1]--;
 
-        // colonne de gauche
         for (int y = dir[1]; y >= dir[0]; y--)
             g[y * n + dir[2]] = values[idx++];
         dir[2]++;
@@ -161,7 +157,7 @@ void printNPuzzleState(const NPuzzleState& s)
             int value = s.board[row * s.size + col];
 
             if (value == 0)
-                std::cout << "   ";   // case vide
+                std::cout << "   ";
             else
                 std::cout << std::setw(3) << value;
 

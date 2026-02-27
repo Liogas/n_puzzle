@@ -6,7 +6,7 @@
 /*   By: glions <glions@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 12:43:31 by glions            #+#    #+#             */
-/*   Updated: 2026/02/26 16:16:42 by glions           ###   ########.fr       */
+/*   Updated: 2026/02/27 12:58:55 by glions           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,9 @@ int	main(int ac, char **av)
 		return (0);
 	}
 
+	std::cout << "Start :" << std::endl;
 	printNPuzzleState(start);
+	std::cout << "Goal :" << std::endl;
 	printNPuzzleState(dest);
 
 	std::vector<int> pattern = {1, 2, 3, 4};
@@ -147,8 +149,8 @@ int	main(int ac, char **av)
     }
 
 	startAStar(start, dest, heur);
-	startGreedy(start, dest, heur);
-	startUniform(start, dest);
+	// startGreedy(start, dest, heur);
+	// startUniform(start, dest);
 	
 	return (0);
 }
